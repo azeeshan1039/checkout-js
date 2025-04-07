@@ -3,11 +3,11 @@ import React, { memo } from 'react';
 import { Toggle } from '../../ui/toggle';
 
 interface ShippingOptionAdditionalDescriptionProps {
-  description: string;
+    description: string;
 }
 
 const ShippingOptionAdditionalDescription: React.FunctionComponent<
-  ShippingOptionAdditionalDescriptionProps
+    ShippingOptionAdditionalDescriptionProps
 > = ({ description }) => {
   return (
     <div className="shippingOption-additionalDescription--container">
