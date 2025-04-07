@@ -13,198 +13,210 @@ import { withFormikExtended } from '../../common/form';
 import getRecommendedShippingOption from '../getRecommendedShippingOption';
 import StaticConsignmentItemList from '../StaticConsignmentItemList';
 
+import CalendarShippingOptions from './CalendarShippingOptions';
 import { ShippingOptionsProps, WithCheckoutShippingOptionsProps } from './ShippingOptions';
 import './ShippingOptionsForm.scss';
 import ShippingOptionsList from './ShippingOptionsList';
 
 export type ShippingOptionsFormProps = ShippingOptionsProps &
-    WithCheckoutShippingOptionsProps &
-    AnalyticsContextProps;
+  WithCheckoutShippingOptionsProps &
+  AnalyticsContextProps;
 
 const getShippingOptionIds = ({ consignments }: ShippingOptionsFormProps) => {
-    const shippingOptionIds: { [id: string]: string } = {};
+  const shippingOptionIds: { [id: string]: string } = {};
 
-    (consignments || []).forEach((consignment) => {
-        shippingOptionIds[consignment.id] = consignment.selectedShippingOption
-            ? consignment.selectedShippingOption.id
-            : '';
-    });
+  (consignments || []).forEach((consignment) => {
+    shippingOptionIds[consignment.id] = consignment.selectedShippingOption
+      ? consignment.selectedShippingOption.id
+      : '';
+  });
 
-    return { shippingOptionIds };
+  return { shippingOptionIds };
 };
 
 class ShippingOptionsForm extends PureComponent<
-    ShippingOptionsFormProps & FormikProps<ShippingOptionsFormValues>
+  ShippingOptionsFormProps & FormikProps<ShippingOptionsFormValues>
 > {
-    private unsubscribe?: () => void;
+  private unsubscribe?: () => void;
 
-    componentDidMount(): void {
-        const { subscribeToConsignments } = this.props;
+  componentDidMount(): void {
+    const { subscribeToConsignments } = this.props;
 
-        this.unsubscribe = subscribeToConsignments(this.selectDefaultShippingOptions);
+    this.unsubscribe = subscribeToConsignments(this.selectDefaultShippingOptions);
+  }
+
+  componentDidUpdate({ shippingFormRenderTimestamp }: ShippingOptionsFormProps): void {
+    const {
+      analyticsTracker,
+      consignments,
+      shouldShowShippingOptions,
+      shippingFormRenderTimestamp: newShippingFormRenderTimestamp,
+      setValues,
+    } = this.props;
+
+    if (consignments?.length && shouldShowShippingOptions) {
+      analyticsTracker.showShippingMethods();
     }
 
-    componentDidUpdate({ shippingFormRenderTimestamp }: ShippingOptionsFormProps): void {
-        const {
-            analyticsTracker,
-            consignments,
-            shouldShowShippingOptions,
-            shippingFormRenderTimestamp: newShippingFormRenderTimestamp,
-            setValues,
-        } = this.props;
+    if (newShippingFormRenderTimestamp !== shippingFormRenderTimestamp) {
+      setValues(getShippingOptionIds(this.props));
+    }
+  }
 
-        if (consignments?.length && shouldShowShippingOptions) {
-            analyticsTracker.showShippingMethods();
-        }
+  componentWillUnmount(): void {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+      this.unsubscribe = undefined;
+    }
+  }
 
-        if (newShippingFormRenderTimestamp !== shippingFormRenderTimestamp) {
-            setValues(getShippingOptionIds(this.props));
-        }
+  render(): ReactNode {
+    const {
+      consignments,
+      isMultiShippingMode,
+      selectShippingOption,
+      isLoading,
+      shouldShowShippingOptions,
+      invalidShippingMessage,
+      methodId,
+    } = this.props;
+
+    if (!consignments?.length || !shouldShowShippingOptions) {
+      return (
+        <ChecklistSkeleton
+          additionalClassName="shippingOptions-skeleton"
+          isLoading={isLoading()}
+          rows={2}
+        >
+          {this.renderNoShippingOptions(
+            <TranslatedString
+              id={
+                methodId || isMultiShippingMode
+                  ? 'shipping.select_shipping_address_text'
+                  : 'shipping.enter_shipping_address_text'
+              }
+            />,
+          )}
+        </ChecklistSkeleton>
+      );
     }
 
-    componentWillUnmount(): void {
-        if (this.unsubscribe) {
-            this.unsubscribe();
-            this.unsubscribe = undefined;
-        }
+    return (
+      <>
+        {consignments.map((consignment) => (
+          <div className="shippingOptions-container form-fieldset" key={consignment.id}>
+            {isMultiShippingMode && this.renderConsignment(consignment)}
+            {consignment.availableShippingOptions &&
+            consignment.availableShippingOptions.length > 1 ? (
+              <CalendarShippingOptions
+                consignmentId={consignment.id}
+                isLoading={isLoading(consignment.id)}
+                onSelectedOption={selectShippingOption}
+                selectedShippingOptionId={
+                  consignment.selectedShippingOption && consignment.selectedShippingOption.id
+                }
+                shippingOptions={consignment.availableShippingOptions}
+              />
+            ) : (
+              <ShippingOptionsList
+                consignmentId={consignment.id}
+                inputName={getRadioInputName(consignment.id)}
+                isLoading={isLoading(consignment.id)}
+                isMultiShippingMode={isMultiShippingMode}
+                onSelectedOption={selectShippingOption}
+                selectedShippingOptionId={
+                  consignment.selectedShippingOption && consignment.selectedShippingOption.id
+                }
+                shippingOptions={consignment.availableShippingOptions}
+              />
+            )}
+
+            {(!consignment.availableShippingOptions ||
+              !consignment.availableShippingOptions.length) && (
+              <ChecklistSkeleton
+                additionalClassName="shippingOptions-skeleton"
+                isLoading={isLoading(consignment.id)}
+                rows={2}
+              >
+                {this.renderNoShippingOptions(invalidShippingMessage)}
+              </ChecklistSkeleton>
+            )}
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  private selectDefaultShippingOptions: (state: CheckoutSelectors) => void = async ({ data }) => {
+    const { selectShippingOption, setFieldValue } = this.props;
+
+    const consignment = (data.getConsignments() || []).find(
+      ({ selectedShippingOption, availableShippingOptions: shippingOptions }) =>
+        !selectedShippingOption && shippingOptions,
+    );
+
+    if (!consignment || !consignment.availableShippingOptions) {
+      return;
     }
 
-    render(): ReactNode {
-        const {
-            consignments,
-            isMultiShippingMode,
-            selectShippingOption,
-            isLoading,
-            shouldShowShippingOptions,
-            invalidShippingMessage,
-            methodId,
-        } = this.props;
+    const { availableShippingOptions, id } = consignment;
+    const recommendedOption = getRecommendedShippingOption(availableShippingOptions);
+    const singleShippingOption =
+      availableShippingOptions.length === 1 && availableShippingOptions[0];
+    const defaultShippingOption = recommendedOption || singleShippingOption;
 
-        if (!consignments?.length || !shouldShowShippingOptions) {
-            return (
-                <ChecklistSkeleton
-                    additionalClassName="shippingOptions-skeleton"
-                    isLoading={isLoading()}
-                    rows={2}
-                >
-                    {this.renderNoShippingOptions(
-                        <TranslatedString
-                            id={
-                                methodId || isMultiShippingMode
-                                    ? 'shipping.select_shipping_address_text'
-                                    : 'shipping.enter_shipping_address_text'
-                            }
-                        />,
-                    )}
-                </ChecklistSkeleton>
-            );
-        }
-
-        return (
-            <>
-                {consignments.map((consignment) => (
-                    <div className="shippingOptions-container form-fieldset" key={consignment.id}>
-                        {isMultiShippingMode && this.renderConsignment(consignment)}
-
-                        <ShippingOptionsList
-                            consignmentId={consignment.id}
-                            inputName={getRadioInputName(consignment.id)}
-                            isLoading={isLoading(consignment.id)}
-                            isMultiShippingMode={isMultiShippingMode}
-                            onSelectedOption={selectShippingOption}
-                            selectedShippingOptionId={
-                                consignment.selectedShippingOption &&
-                                consignment.selectedShippingOption.id
-                            }
-                            shippingOptions={consignment.availableShippingOptions}
-                        />
-
-                        {(!consignment.availableShippingOptions ||
-                            !consignment.availableShippingOptions.length) && (
-                            <ChecklistSkeleton
-                                additionalClassName="shippingOptions-skeleton"
-                                isLoading={isLoading(consignment.id)}
-                                rows={2}
-                            >
-                                {this.renderNoShippingOptions(invalidShippingMessage)}
-                            </ChecklistSkeleton>
-                        )}
-                    </div>
-                ))}
-            </>
-        );
+    if (!defaultShippingOption) {
+      return;
     }
 
-    private selectDefaultShippingOptions: (state: CheckoutSelectors) => void = async ({ data }) => {
-        const { selectShippingOption, setFieldValue } = this.props;
+    await selectShippingOption(id, defaultShippingOption.id);
+    setFieldValue(`shippingOptionIds.${id}`, defaultShippingOption.id);
+  };
 
-        const consignment = (data.getConsignments() || []).find(
-            ({ selectedShippingOption, availableShippingOptions: shippingOptions }) =>
-                !selectedShippingOption && shippingOptions,
-        );
+  private renderNoShippingOptions(message: ReactNode): ReactNode {
+    return (
+      <div className="shippingOptions-panel optimizedCheckout-overlay">
+        <p
+          aria-live="polite"
+          className="shippingOptions-panel-message optimizedCheckout-primaryContent"
+          role="alert"
+        >
+          {message}
+        </p>
+      </div>
+    );
+  }
 
-        if (!consignment || !consignment.availableShippingOptions) {
-            return;
-        }
+  private renderConsignment(consignment: Consignment): ReactNode {
+    const { cart } = this.props;
 
-        const { availableShippingOptions, id } = consignment;
-        const recommendedOption = getRecommendedShippingOption(availableShippingOptions);
-        const singleShippingOption =
-            availableShippingOptions.length === 1 && availableShippingOptions[0];
-        const defaultShippingOption = recommendedOption || singleShippingOption;
+    return (
+      <div className="staticConsignment">
+        <strong>
+          <TranslatedString id="shipping.shipping_address_heading" />
+        </strong>
 
-        if (!defaultShippingOption) {
-            return;
-        }
+        <StaticAddress address={consignment.shippingAddress} type={AddressType.Shipping} />
 
-        await selectShippingOption(id, defaultShippingOption.id);
-        setFieldValue(`shippingOptionIds.${id}`, defaultShippingOption.id);
-    };
-
-    private renderNoShippingOptions(message: ReactNode): ReactNode {
-        return (
-            <div className="shippingOptions-panel optimizedCheckout-overlay">
-                <p
-                    aria-live="polite"
-                    className="shippingOptions-panel-message optimizedCheckout-primaryContent"
-                    role="alert"
-                >
-                    {message}
-                </p>
-            </div>
-        );
-    }
-
-    private renderConsignment(consignment: Consignment): ReactNode {
-        const { cart } = this.props;
-
-        return (
-            <div className="staticConsignment">
-                <strong>
-                    <TranslatedString id="shipping.shipping_address_heading" />
-                </strong>
-
-                <StaticAddress address={consignment.shippingAddress} type={AddressType.Shipping} />
-
-                <StaticConsignmentItemList cart={cart} consignment={consignment} />
-            </div>
-        );
-    }
+        <StaticConsignmentItemList cart={cart} consignment={consignment} />
+      </div>
+    );
+  }
 }
 
 function getRadioInputName(consignmentId: string): string {
-    return `shippingOptionIds.${consignmentId}`;
+  return `shippingOptionIds.${consignmentId}`;
 }
 
 export interface ShippingOptionsFormValues {
-    shippingOptionIds: {
-        [shippingOptionIds: string]: string;
-    };
+  shippingOptionIds: {
+    [shippingOptionIds: string]: string;
+  };
 }
 
 export default withAnalytics(
-    withFormikExtended<ShippingOptionsFormProps, ShippingOptionsFormValues>({
-        handleSubmit: noop,
-        mapPropsToValues: getShippingOptionIds,
-    })(ShippingOptionsForm),
+  withFormikExtended<ShippingOptionsFormProps, ShippingOptionsFormValues>({
+    handleSubmit: noop,
+    mapPropsToValues: getShippingOptionIds,
+  })(ShippingOptionsForm),
 );
