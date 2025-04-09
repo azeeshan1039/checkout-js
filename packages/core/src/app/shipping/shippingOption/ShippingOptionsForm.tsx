@@ -13,6 +13,7 @@ import { withFormikExtended } from '../../common/form';
 import getRecommendedShippingOption from '../getRecommendedShippingOption';
 import StaticConsignmentItemList from '../StaticConsignmentItemList';
 
+import CalendarShippingOptions from './CalendarShippingOptions';
 import { ShippingOptionsProps, WithCheckoutShippingOptionsProps } from './ShippingOptions';
 import './ShippingOptionsForm.scss';
 import ShippingOptionsList from './ShippingOptionsList';
@@ -106,7 +107,19 @@ class ShippingOptionsForm extends PureComponent<
                     <div className="shippingOptions-container form-fieldset" key={consignment.id}>
                         {isMultiShippingMode && this.renderConsignment(consignment)}
 
-                        <ShippingOptionsList
+                        {consignment.availableShippingOptions &&
+                        consignment.availableShippingOptions.length > 1 ? (
+                            <CalendarShippingOptions
+                            consignmentId={consignment.id}
+                            isLoading={isLoading(consignment.id)}
+                            onSelectedOption={selectShippingOption}
+                            selectedShippingOptionId={
+                                consignment.selectedShippingOption && consignment.selectedShippingOption.id
+                            }
+                            shippingOptions={consignment.availableShippingOptions}
+                            />
+                        ) : (
+                            <ShippingOptionsList
                             consignmentId={consignment.id}
                             inputName={getRadioInputName(consignment.id)}
                             isLoading={isLoading(consignment.id)}
@@ -117,8 +130,8 @@ class ShippingOptionsForm extends PureComponent<
                                 consignment.selectedShippingOption.id
                             }
                             shippingOptions={consignment.availableShippingOptions}
-                        />
-
+                            />
+                        )}
                         {(!consignment.availableShippingOptions ||
                             !consignment.availableShippingOptions.length) && (
                             <ChecklistSkeleton
