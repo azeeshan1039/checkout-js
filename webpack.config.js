@@ -153,6 +153,11 @@ function appConfig(options, argv) {
                             loader: require.resolve('source-map-loader'),
                         },
                         {
+                            test: /\.css$/,
+                            include: /node_modules\/react-day-picker\/src/,
+                            use: ['style-loader', 'css-loader'],
+                        },
+                        {
                             test: /\.tsx?$/,
                             include: tsLoaderIncludes,
                             use: [
