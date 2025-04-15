@@ -163,22 +163,23 @@
     background-color: white;
     border: 1px solid #E07A67;
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    transform: scale(1.2) translateY(-2px);
+    width: 20px;
+    height: 20px;
     position: relative;
-    outline: none;
+    transform: translateY(-2px);
     cursor: pointer;
+    vertical-align: middle;
   }
   .sec input[type="radio"]:checked::after {
+    transform: scale(0.6);
+  }
+  .sec input[type="radio"]::after {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
+    top: 0; left: 0; right: 0; bottom: 0;
     border-radius: 50%;
+    transform: scale(0);
+    transform-origin: center center;
     background-color: #E07A67;
   }
   .sec input[type="radio"]:not(:checked) {
