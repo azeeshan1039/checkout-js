@@ -113,34 +113,68 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
 
   const footerContent =
     selectedDate && availableDatesMap[selectedDate.toDateString()] ? (
-      <div className="dp-footer">
-        <strong>Selected Delivery Date:</strong>{' '}
-        <div>
-          {format(selectedDate, 'eeee, d MMMM, yyyy')} —{' '}
-          <ShopperCurrency amount={availableDatesMap[selectedDate.toDateString()].cost} />
+      <div className='main-footer'>
+        <span>SELECT A DELIVERY METHOD</span>
+        <div className='dp-footer'>
+          <div className='sec'>
+            <input type='radio' checked={true}/>
+          </div>
+          <div className='dp-content'>
+            <div className='sec'>
+              <span>2-Person Home Delivery Service</span>
+              <span>
+                <strong>
+                  {format(selectedDate, 'eeee, d MMMM, yyyy')}
+                </strong>
+              </span>
+            </div>
+            <div className='sec right'>
+              <span>
+                <strong>
+                  <ShopperCurrency amount={availableDatesMap[selectedDate.toDateString()].cost} />
+                </strong>
+              </span>
+              <span>(inc. VAT)</span>
+            </div>
+          </div>
+        </div>
+        <div className='bottom-dialog'>
+          <span>Two Person In-Home Delivery - You will receive a 2 hour delivery slot by email and our delivery team will call you 30 minutes before arrival. Our two person delivery team will bring your order into any <strong>clearly accessible ground floor room.</strong></span>
         </div>
       </div>
     ) : (
-      <div className="dp-footer">Please select a delivery date.</div>
+      <div className='main-footer'>
+        <span>SELECT A DELIVERY METHOD</span>
+        <div className='dp-footer'>
+          <div className='sec'><input type='radio' checked={true}/></div>
+          <div className='dp-content'>
+            <div className='sec'>
+              <span>Please Select A Delivery Date.</span>
+            </div>
+          </div>
+        </div>
+      </div>
     );
 
   return (
     <LoadingOverlay isLoading={isLoading}>
-      <DayPicker
-        components={{
-          DayButton: (props) => <CustomDay {...props} availableDatesMap={availableDatesMap} />,
-        }}
-        fixedWeeks={true}
-        footer={footerContent}
-        mode="single"
-        modifiers={{
-          available: (date: Date) => isDayAvailable(date),
-          disabled: (date: Date) => !isDayAvailable(date),
-        }}
-        onSelect={handleDaySelect}
-        selected={selectedShippingOptionId === selectedShippingID ? selectedDate : undefined}
-        showOutsideDays={true}
-      />
+      <div>
+        <DayPicker
+          components={{
+            DayButton: (props) => <CustomDay {...props} availableDatesMap={availableDatesMap} />,
+          }}
+          fixedWeeks={true}
+          mode="single"
+          modifiers={{
+            available: (date: Date) => isDayAvailable(date),
+            disabled: (date: Date) => !isDayAvailable(date),
+          }}
+          onSelect={handleDaySelect}
+          selected={selectedShippingOptionId === selectedShippingID ? selectedDate : undefined}
+          showOutsideDays={true}
+        />
+        {footerContent}
+      </div>
     </LoadingOverlay>
   );
 };
