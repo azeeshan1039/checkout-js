@@ -91,7 +91,8 @@
     font-size: 15px;
     margin-top: 0.5rem;
     min-height: 50px;
-    border: solid 1px rgb(0, 154, 137);
+    border: solid 1px #DFDFDF;
+    background-color: #F5F5F5;
     border-radius: 0.5rem;
     gap: 10px;
     padding: 10px 8px;
@@ -157,9 +158,31 @@
       align-items:end;
   }
   .sec input[type="radio"] {
-    accent-color: rgb(0, 154, 137);
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: white;
+    border: 1px solid #E07A67;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
     transform: scale(1.2) translateY(-2px);
-
+    position: relative;
+    outline: none;
+    cursor: pointer;
+  }
+  .sec input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #E07A67;
+  }
+  .sec input[type="radio"]:not(:checked) {
+    background-color: white;
   }
   .main-footer{
       margin-top:1.5rem;
@@ -169,5 +192,16 @@
       font-size: 1rem;
       padding: 15px;
       border-radius: 0.5rem;
+      max-height: fit-content;
+  }
+  .calendar-area{
+      display: flex;
+      flex-direction: row;
       margin-top: 10px;
+      gap: 10px;
+  }
+  @media only screen and (max-width: 600px) {
+    .calendar-area {
+      flex-direction: column;
+    }
   }
