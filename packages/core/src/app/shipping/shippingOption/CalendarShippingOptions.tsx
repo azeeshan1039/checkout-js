@@ -114,7 +114,11 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
   const footerContent =
     selectedDate && availableDatesMap[selectedDate.toDateString()] ? (
       <div className='main-footer'>
-        <span>SELECT A DELIVERY METHOD</span>
+        <span>
+          <strong>
+            SELECT A DELIVERY METHOD
+          </strong>
+        </span>
         <div className='dp-footer'>
           <div className='sec'>
             <input type='radio' checked={true}/>
@@ -144,7 +148,11 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
       </div>
     ) : (
       <div className='main-footer'>
-        <span>SELECT A DELIVERY METHOD</span>
+        <span>
+          <strong>
+            SELECT A DELIVERY METHOD
+          </strong>
+        </span>
         <div className='dp-footer'>
           <div className='sec'><input type='radio' checked={true}/></div>
           <div className='dp-content'>

@@ -1,173 +1,173 @@
 .my-day {
-    box-sizing: border-box;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0.5rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  background:white;
+  border: none;
+  outline: 1px solid rgb(0, 154, 137);
+  margin:1px
+}
+
+.my-day:hover {
+  background-color: #f0f0f0;
+  outline: 1px solid rgb(0, 154, 137);
+}
+
+.my-day-selected {
+  background-color: rgb(0, 154, 137);
+}
+
+.rdp-disabled>.my-day-disabled {
+  pointer-events: none;
+  border: none;
+  background: #F4F4F4;
+  outline: none;
+  position: relative;
+}
+.rdp-disabled>.my-day-disabled>.my-day-date{
+    color: #282829 !important;
+}
+.rdp-disabled>.my-day-disabled>span::after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  background: linear-gradient(
+    45deg,
+    transparent 47%,
+    #4a4a4a 48%,
+    #4a4a4a 48%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+.rdp-weekdays > .rdp-weekday{
+    font-weight: bolder !important;
+}
+.rdp-root{
+    border: solid 1px black;
+    max-width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border-radius: 0.5rem;
+}
+
+.my-day-date {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #4a4a4a;
+}
+
+.my-day-price {
+  font-size: 0.7rem;
+  color: #4a4a4a;
+  display: block;
+}
+
+.rdp-selected > button.my-day-selected > .my-day-date{
+  color:white !important;
+}
+.rdp-selected > button.my-day-selected > .my-day-price{
+  color:white !important;
+}
+.rdp-month {
+  min-height: 300px;
+}
+.dp-footer {
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  font-size: 15px;
+  margin-top: 0.5rem;
+  min-height: 50px;
+  border: solid 1px rgb(0, 154, 137);
+  border-radius: 0.5rem;
+  gap: 10px;
+  padding: 10px 8px;
+}
+.rdp-button_next,
+.rdp-button_previous {
+  border-radius: 4px;
+  border: 2px solid #d1f0d1;
+  padding: 0px;
+}
+
+.rdp-button_next:hover,
+.rdp-button_previous:hover {
+  border-radius: 4px;
+  border: 1px solid #025850;
+}
+.rdp-today > .my-day> span {
+  z-index: 10;
+}
+.rdp-today > .my-day::before{
+  content: "";
+  z-index: 0;
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 2;
+  pointer-events: none;
+}
+
+.rdp-chevron > polygon {
+  fill: black;
+}
+
+.rdp-month_caption {
+  font-size: 15px !important;
+  font-weight: bold !important;
+}
+.rdp-outside{
+    opacity: 0.3 !important;
+}
+.dp-content{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.sec{
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    padding: 0.5rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    cursor: pointer;
-    background:white;
-    border: none;
-    outline: 1px solid rgb(0, 154, 137);
-    margin:1px
-  }
+}
+.sec>span{
+    font-size: 1rem;
+}
+.right >span{
+    text-align: right;
+}
+.inputB{
+    align-items:end;
+}
+.sec input[type="radio"] {
+  accent-color: rgb(0, 154, 137);
+  transform: scale(1.2) translateY(-2px);
 
-  .my-day:hover {
-    background-color: #f0f0f0;
-    outline: 1px solid rgb(0, 154, 137);
-  }
-
-  .my-day-selected {
-    background-color: rgb(0, 154, 137);
-  }
-
-  .rdp-disabled>.my-day-disabled {
-    pointer-events: none;
-    border: none;
-    background: #F4F4F4;
-    outline: none;
-    position: relative;
-  }
-  .rdp-disabled>.my-day-disabled>.my-day-date{
-      color: #282829 !important;
-  }
-  .rdp-disabled>.my-day-disabled>span::after {
-    content: "";
-    position: absolute;
-    top: 5%;
-    left: 5%;
-    width: 90%;
-    height: 90%;
-    background: linear-gradient(
-      45deg,
-      transparent 47%,
-      #4a4a4a 48%,
-      #4a4a4a 48%,
-      transparent 50%
-    );
-    pointer-events: none;
-  }
-  .rdp-weekdays > .rdp-weekday{
-      font-weight: bolder !important;
-  }
-  .rdp-root{
-      border: solid 1px black;
-      max-width: fit-content;
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-bottom: 10px;
-      border-radius: 0.5rem;
-  }
-
-  .my-day-date {
-    font-size: 0.8rem;
-    font-weight: normal;
-    color: #4a4a4a;
-  }
-
-  .my-day-price {
-    font-size: 0.6rem;
-    color: #4a4a4a;
-    display: block;
-  }
-
-  .rdp-selected > button.my-day-selected > .my-day-date{
-    color:white !important;
-  }
-  .rdp-selected > button.my-day-selected > .my-day-price{
-    color:white !important;
-  }
-  .rdp-month {
-    min-height: 300px;
-  }
-  .dp-footer {
-    text-align: left;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    font-size: 15px;
-    margin-top: 0.5rem;
-    min-height: 50px;
-    border: solid 1px rgb(0, 154, 137);
+}
+.main-footer{
+    margin-top:1.5rem;
+}
+.bottom-dialog{
+    background: rgb(252, 235, 223);
+    font-size: 1rem;
+    padding: 15px;
     border-radius: 0.5rem;
-    gap: 10px;
-    padding: 0px 8px;
-  }
-  .rdp-button_next,
-  .rdp-button_previous {
-    border-radius: 4px;
-    border: 2px solid #d1f0d1;
-    padding: 0px;
-  }
-
-  .rdp-button_next:hover,
-  .rdp-button_previous:hover {
-    border-radius: 4px;
-    border: 1px solid #025850;
-  }
-  .rdp-today > .my-day> span {
-    z-index: 10;
-  }
-  .rdp-today > .my-day::before{
-    content: "";
-    z-index: 0;
-    position: absolute;
-    top: 52%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 70%;
-    border-radius: 50%;
-    background-color: white;
-    opacity: 2;
-    pointer-events: none;
-  }
-
-  .rdp-chevron > polygon {
-    fill: black;
-  }
-
-  .rdp-month_caption {
-    font-size: 15px !important;
-    font-weight: bold !important;
-  }
-  .rdp-outside{
-      opacity: 0.3 !important;
-  }
-  .dp-content{
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-  }
-  .sec{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-  }
-  .sec>span{
-      font-size: 16px;
-  }
-  .right >span{
-      text-align: right;
-  }
-  .inputB{
-      align-items:end;
-  }
-  .sec input[type="radio"] {
-    accent-color: rgb(0, 154, 137);
-    transform: scale(1.2) translateY(-2px);
-
-  }
-  .main-footer{
-      margin-top:1.5rem;
-  }
-  .bottom-dialog{
-      background: rgb(252, 235, 223);
-      font-size: 14px;
-      padding: 15px;
-      border-radius: 0.5rem;
-      margin-top: 10px;
-  }
+    margin-top: 10px;
+}
