@@ -125,11 +125,13 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
           </div>
           <div className='dp-content'>
             <div className='sec'>
-              <span>2-Person Home Delivery Service</span>
               <span>
                 <strong>
-                  {format(selectedDate, 'eeee, d MMMM, yyyy')}
+                  2-Person Home Delivery Service
                 </strong>
+              </span>
+              <span>
+                {format(selectedDate, 'eeee, d MMMM, yyyy')}
               </span>
             </div>
             <div className='sec right'>
@@ -138,12 +140,8 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
                   <ShopperCurrency amount={availableDatesMap[selectedDate.toDateString()].cost} />
                 </strong>
               </span>
-              <span>(inc. VAT)</span>
             </div>
           </div>
-        </div>
-        <div className='bottom-dialog'>
-          <span>Two Person In-Home Delivery - You will receive a 2 hour delivery slot by email and our delivery team will call you 30 minutes before arrival. Our two person delivery team will bring your order into any <strong>clearly accessible ground floor room.</strong></span>
         </div>
       </div>
     ) : (
@@ -167,21 +165,26 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
   return (
     <LoadingOverlay isLoading={isLoading}>
       <div>
-        <DayPicker
-          components={{
-            DayButton: (props) => <CustomDay {...props} availableDatesMap={availableDatesMap} />,
-          }}
-          fixedWeeks={true}
-          mode="single"
-          modifiers={{
-            available: (date: Date) => isDayAvailable(date),
-            disabled: (date: Date) => !isDayAvailable(date),
-          }}
-          onSelect={handleDaySelect}
-          selected={selectedShippingOptionId === selectedShippingID ? selectedDate : undefined}
-          showOutsideDays={true}
-        />
         {footerContent}
+        <div className='calendar-area'>
+          <DayPicker
+            components={{
+              DayButton: (props) => <CustomDay {...props} availableDatesMap={availableDatesMap} />,
+            }}
+            fixedWeeks={true}
+            mode="single"
+            modifiers={{
+              available: (date: Date) => isDayAvailable(date),
+              disabled: (date: Date) => !isDayAvailable(date),
+            }}
+            onSelect={handleDaySelect}
+            selected={selectedShippingOptionId === selectedShippingID ? selectedDate : undefined}
+            showOutsideDays={true}
+          />
+          <div className='bottom-dialog'>
+            <span>Two Person In-Home Delivery - You will receive a 2 hour delivery slot by email and our delivery team will call you 30 minutes before arrival. Our two person delivery team will bring your order into any <strong>clearly accessible ground floor room.</strong></span>
+          </div>
+        </div>
       </div>
     </LoadingOverlay>
   );
