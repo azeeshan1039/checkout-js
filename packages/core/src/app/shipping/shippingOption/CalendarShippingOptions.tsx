@@ -1,7 +1,8 @@
 import { ShippingOption } from '@bigcommerce/checkout-sdk';
-import { format, isValid, parse } from 'date-fns';
+import { format, isValid, parse, startOfMonth, isBefore, isAfter } from 'date-fns';
 import React, { ButtonHTMLAttributes, useEffect, useState } from 'react';
-import { CalendarDay, DayPicker, Modifiers } from 'react-day-picker';
+import { Chevron } from 'react-day-picker';
+import { CalendarDay, DayPicker, Modifiers, type NavProps, useDayPicker,  } from 'react-day-picker';
 
 import { LoadingOverlay } from '@bigcommerce/checkout/ui';
 
@@ -161,7 +162,58 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
         </div>
       </div>
     );
-
+    const formatWeekdayName = (date: Date) => {
+      const names = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      return names[date.getDay()];
+    };
+  
+    const firstAvailableDay  = availableDates.length && new Date(Math.min(...availableDates.map(d => d.getTime())));
+    const lastAvailableDay   = availableDates.length && new Date(Math.max(...availableDates.map(d => d.getTime())));
+  
+    const startMonth = startOfMonth(firstAvailableDay);
+    const endMonth =  startOfMonth(lastAvailableDay);
+  
+    const [displayedMonth, setDisplayedMonth] = useState(startMonth);
+  
+    function handleMonthChange(newMonth: Date) {
+      const month = startOfMonth(newMonth);
+      if (isBefore(month, startMonth) || isAfter(month, endMonth)) {
+        return;
+      }
+      setDisplayedMonth(month);
+    }
+    function NavBar({className, style}: NavProps) {
+      const { previousMonth, nextMonth, goToMonth } = useDayPicker();
+      const disablePrev =
+        !previousMonth || isBefore(previousMonth, startMonth);
+  
+      const disableNext =
+        !nextMonth || isAfter(nextMonth, endMonth);
+  
+      return (
+        <div className={`rdp-nav ${className ?? ""}`} style={style}>
+          <button
+            type="button"
+            className="rdp-button_previous"
+            aria-label="Previous month"
+            disabled={disablePrev}
+            onClick={() => !disablePrev && goToMonth(previousMonth!)}
+          >
+            <Chevron orientation='left'/>
+          </button>
+  
+          <button
+            type="button"
+            className="rdp-button_next"
+            aria-label="Next month"
+            disabled={disableNext}
+            onClick={() => !disableNext && goToMonth(nextMonth!)}
+          >
+            <Chevron orientation='right'/>
+          </button>
+        </div>
+      );
+    }
   return (
     <LoadingOverlay isLoading={isLoading}>
       <div>
@@ -169,8 +221,12 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
         <div className='calendar-area'>
           <DayPicker
             components={{
+              Nav: NavBar,
               DayButton: (props) => <CustomDay {...props} availableDatesMap={availableDatesMap} />,
             }}
+            formatters={{formatWeekdayName}}
+            month={displayedMonth}
+            onMonthChange={handleMonthChange}
             fixedWeeks={true}
             mode="single"
             modifiers={{
