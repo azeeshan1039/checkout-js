@@ -21,7 +21,7 @@
     outline: 2px solid rgb(0, 154, 137);
     outline-offset: -1px;
   }
-  
+
   .my-day-selected {
     background-color: rgb(0, 154, 137);
   }
@@ -47,11 +47,11 @@
     width: 90%;
     height: 90%;
     background: linear-gradient(
-    45deg,
-    transparent 47%,
-    #4a4a4a 48%,
-    #4a4a4a 48%,
-    transparent 50%
+      45deg,
+      transparent 47%,
+      #4a4a4a 48%,
+      #4a4a4a 48%,
+      transparent 50%
     );
     pointer-events: none;
     opacity: var(--rdp-disabled-opacity);
@@ -66,12 +66,12 @@
     color: black;
   }
   .rdp-root{
-    border: solid 1px black;
-    max-width: fit-content;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    border-radius: 0.5rem;
+      border: solid 1px black;
+      max-width: fit-content;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+      border-radius: 0.5rem;
   }
 
   .my-day-date {
@@ -150,23 +150,23 @@
     background-color: rgb(244, 244, 244) !important;
   }
   .dp-content{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
   }
   .sec{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
   }
   .sec>span{
-    font-size: 1rem;
+      font-size: 1rem;
   }
   .right >span{
-    text-align: right;
+      text-align: right;
   }
   .inputB{
-    align-items:end;
+      align-items:end;
   }
   .sec input[type="radio"] {
     appearance: none;
@@ -197,23 +197,23 @@
     background-color: white;
   }
   .main-footer{
-    margin-top:1.5rem;
+      margin-top:1.5rem;
   }
   .bottom-dialog{
-    background: rgb(252, 235, 223);
-    font-size: 1rem;
-    padding: 15px;
-    border-radius: 0.5rem;
-    max-height: fit-content;
+      background: rgb(252, 235, 223);
+      font-size: 1rem;
+      padding: 15px;
+      border-radius: 0.5rem;
+      max-height: fit-content;
   }
   .calendar-area{
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    gap: 10px;
+      display: flex;
+      flex-direction: row;
+      margin-top: 10px;
+      gap: 10px;
   }
   @media only screen and (max-width: 600px) {
     .calendar-area {
-    flex-direction: column;
+      flex-direction: column;
     }
   }
