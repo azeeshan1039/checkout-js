@@ -11,33 +11,33 @@
     cursor: pointer;
     background:white;
     border: none;
-    outline: 1px solid rgb(0, 154, 137);
+    outline: 2px solid rgb(0, 154, 137);
     outline-offset: -2px !important;
     margin: 1px !important;
   }
 
   .my-day:hover {
     background-color: #f0f0f0;
-    outline: 1px solid rgb(0, 154, 137);
+    outline: 2px solid rgb(0, 154, 137);
     outline-offset: -1px;
   }
-
+  
   .my-day-selected {
     background-color: rgb(0, 154, 137);
   }
   .my-day-selected:hover{
     background-color: rgb(0, 154, 137);
   }
-
+  .rdp-disabled{
+    opacity:1 !important;
+  }
   .rdp-disabled>.my-day-disabled {
     pointer-events: none;
     border: none;
     background-color: #F4F4F4;
     outline: none;
     position: relative;
-  }
-  .rdp-disabled>.my-day-disabled>.my-day-date{
-      color: #282829 !important;
+    z-index: 1;
   }
   .rdp-disabled>.my-day-disabled>span::after {
     content: "";
@@ -47,26 +47,31 @@
     width: 90%;
     height: 90%;
     background: linear-gradient(
-      45deg,
-      transparent 47%,
-      #4a4a4a 48%,
-      #4a4a4a 48%,
-      transparent 50%
+    45deg,
+    transparent 47%,
+    #4a4a4a 48%,
+    #4a4a4a 48%,
+    transparent 50%
     );
     pointer-events: none;
+    opacity: var(--rdp-disabled-opacity);
+    z-index: 5 ;
+  }
+  .rdp-disabled,.rdp-outside>.my-day-disabled>span::after {
+    opacity: 0.5;
   }
   .rdp-weekdays > .rdp-weekday{
-      font-weight: bolder !important;
-      opacity: 1;
-      color: black;
+    font-weight: bolder !important;
+    opacity: 1;
+    color: black;
   }
   .rdp-root{
-      border: solid 1px black;
-      max-width: fit-content;
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-bottom: 10px;
-      border-radius: 0.5rem;
+    border: solid 1px black;
+    max-width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border-radius: 0.5rem;
   }
 
   .my-day-date {
@@ -106,15 +111,14 @@
   }
   .rdp-button_next,
   .rdp-button_previous {
-    border-radius: 4px;
-    border: 2px solid #d1f0d1;
-    padding: 0px;
+    border: 0px !important;
+    outline: 0px;
   }
 
   .rdp-button_next:hover,
   .rdp-button_previous:hover {
-    border-radius: 4px;
-    border: 1px solid #025850;
+    border: 0px !important;
+    outline: 0px;
   }
   .rdp-today.rdp-disabled > .my-day> span,.rdp-today.rdp-outside > .my-day> span {
     z-index: 10;
@@ -141,27 +145,28 @@
     font-size: 15px !important;
     font-weight: bold !important;
   }
-  .rdp-outside{
-      opacity: 0.2 !important;
+  .rdp-outside.rdp-disabled >.my-day-disabled{
+    opacity: 0.5 !important;
+    background-color: rgb(244, 244, 244) !important;
   }
   .dp-content{
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
   }
   .sec{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .sec>span{
-      font-size: 1rem;
+    font-size: 1rem;
   }
   .right >span{
-      text-align: right;
+    text-align: right;
   }
   .inputB{
-      align-items:end;
+    align-items:end;
   }
   .sec input[type="radio"] {
     appearance: none;
@@ -192,23 +197,23 @@
     background-color: white;
   }
   .main-footer{
-      margin-top:1.5rem;
+    margin-top:1.5rem;
   }
   .bottom-dialog{
-      background: rgb(252, 235, 223);
-      font-size: 1rem;
-      padding: 15px;
-      border-radius: 0.5rem;
-      max-height: fit-content;
+    background: rgb(252, 235, 223);
+    font-size: 1rem;
+    padding: 15px;
+    border-radius: 0.5rem;
+    max-height: fit-content;
   }
   .calendar-area{
-      display: flex;
-      flex-direction: row;
-      margin-top: 10px;
-      gap: 10px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    gap: 10px;
   }
   @media only screen and (max-width: 600px) {
     .calendar-area {
-      flex-direction: column;
+    flex-direction: column;
     }
   }
