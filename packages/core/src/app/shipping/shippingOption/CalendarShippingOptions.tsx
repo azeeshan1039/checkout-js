@@ -182,7 +182,7 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
       }
       setDisplayedMonth(month);
     }
-    function NavBar(props: NavProps) {
+    function NavBar({className, style}: NavProps) {
       const { previousMonth, nextMonth, goToMonth } = useDayPicker();
       const disablePrev =
         !previousMonth || isBefore(previousMonth, startMonth);
@@ -191,7 +191,7 @@ const CalendarShippingOptions: React.FC<DeliveryDatePickerProps> = ({
         !nextMonth || isAfter(nextMonth, endMonth);
   
       return (
-        <div {...props} className="rdp-nav">
+        <div className={`rdp-nav ${className ?? ""}`} style={style}>
           <button
             type="button"
             className="rdp-button_previous"
